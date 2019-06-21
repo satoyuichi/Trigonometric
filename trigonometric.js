@@ -1,3 +1,10 @@
+MathBox.DOM.Types.latex = MathBox.DOM.createClass({
+  render: function (el) {
+    this.props.innerHTML = katex.renderToString(this.children);
+    return el('span', this.props);
+  }
+});
+
 mathbox = mathBox({
   plugins: ['core', 'controls', 'cursor', 'stats'],
   controls: {
@@ -50,6 +57,34 @@ present.axis({
     divideY: 3,
   });
 
+present.interval({
+  expr: function (emit, i, time, delta) {
+    emit(0, 0);
+  },
+  items: 1,
+  channels: 2,
+})
+  .html({
+    width: 8,
+    height: 3,
+    depth:  2,
+    expr: function (emit, el, i, j, k, l, time) {
+      amplitudeContent = (params.amplitude > 1) ? params.amplitude : "";
+      angularContent = (params.angular > 1) ? params.angular : "";
+
+      // Emit latex element
+      emit(el('latex', null, amplitudeContent + '\\sin ({ ' + angularContent + '\\theta})'));
+    },
+  })
+  .dom({
+    snap: false,
+    offset: [0, 500],
+    depth: .5,
+    size: 48,
+    zoom: 1,
+    outline: 2,
+  })
+
 present.slide().reveal({
   duration: .5
 }).array({
@@ -90,7 +125,7 @@ present.slide().reveal()
     width: 2,
     expr: function (emit, x, i, time) {
       emit(0, 0);
-      emit(Math.cos(time), Math.sin(time));
+      emit(Math.cos(time), params.amplitude * Math.sin(params.angular * time));
     },
     items: 1,
     channels: 2,
@@ -119,7 +154,7 @@ present.slide().reveal()
     width: 2,
     expr: function (emit, x, i, time) {
       emit(0, 0);
-      emit(0, Math.sin(time));
+      emit(0, params.amplitude * Math.sin(params.angular * time));
     },
     items: 1,
     channels: 2,
@@ -132,7 +167,7 @@ present.slide().reveal()
   .interval({
     width: 1,
     expr: function (emit, x, i, time) {
-      emit(0, Math.sin(time));
+      emit(0, params.amplitude * Math.sin(params.angular * time));
     },
     items: 1,
     channels: 2,
@@ -140,6 +175,24 @@ present.slide().reveal()
   .point({
     color: 0x0000FF,
     size: 40,
+  })
+  .html({
+    width: 8,
+    height: 3,
+    depth:  2,
+    expr: function (emit, el, i, j, k, l, time) {
+      // Emit latex element
+      emit(el('latex', null, '(0, \\sin {\\theta})'));
+    },
+  })
+  .dom({
+    attributes: {id: "label_sin"},
+    snap: false,
+    offset: [0, -48],
+    depth: .5,
+    size: 32,
+    zoom: 1,
+    outline: 2,
   })
   .interval({
     width: 1,
@@ -150,15 +203,33 @@ present.slide().reveal()
     channels: 2,
   })
   .point({
-    color: 0x00FF00,
+    color: 0x00EE00,
     size: 40,
+  })
+  .html({
+    width: 8,
+    height: 3,
+    depth:  2,
+    expr: function (emit, el, i, j, k, l, time) {
+      // Emit latex element
+      emit(el('latex', null, '(\\cos {\\theta}, 0)'));
+    },
+  })
+  .dom({
+    attributes: {id: "label_cos"},
+    snap: false,
+    offset: [0, -48],
+    depth: .5,
+    size: 32,
+    zoom: 1,
+    outline: 2,
   })
   .end()
   .slide().reveal()
   .interval({
-    width: 128,
+    width: 256,
     expr: function (emit, x, i, time) {
-      var d = Math.sin(x + time);
+      var d = params.amplitude * Math.sin(params.angular * (x + time));
       emit(x, d);
     },
     items: 1,
@@ -167,6 +238,12 @@ present.slide().reveal()
   .line({
     color: 0x3090FF,
     width: 10,
+  }).transform().step({
+    duration: 1,
+    script: [
+      {rotation: [0, 0, 0]},
+      {rotation: [0, 0, -π/2]},
+    ]
   }).interval({
     width: 128,
     expr: function (emit, x, i, time) {
@@ -177,6 +254,6 @@ present.slide().reveal()
     channels: 2,
   })
   .line({
-    color: 0x30FF90,
+    color: 0x30EE90,
     width: 10,
-  }).end().end();
+  }).slide();

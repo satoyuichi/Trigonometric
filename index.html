@@ -6,20 +6,40 @@
 	<script src="./build/mathbox-bundle.min.js"></script>
 	<script src="./build/dat.gui.min.js"></script>
 	<link rel="stylesheet" href="./build/mathbox.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.js"></script>
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1">
     </head>
     <body>
+	<div id="exp_sin_cos" style="
+		 text-align: center;
+		 position: relative;
+		 top: 89px;
+		 font-size: 48px;
+		 "></div>
 	<script type="text/javascript">
-	    var gui = new dat.GUI();
+	 var Params = function() {
+	     this.amplitude = 1;
+	     this.angular = 1;
+	     this.play = true;
+	 };
+
+	 var params = new Params();
+	 window.onload = function() {
+	     var gui = new dat.GUI();
+	     gui.add(params, 'amplitude', 1, 5, 1);
+	     gui.add(params, 'angular', 1, 10, 1);
+	     gui.add(params, 'play');
+	 };
 	</script>
 
-	    <script src="trigonometric.js"></script>
+	<script src="trigonometric.js"></script>
 	<div class="mathbox-loader mathbox-splash-mono mathbox-exit">
 	    <div class="mathbox-logo"></div>
 	    <div class="mathbox-progress"></div>
 	</div>
-	<div>
-	    <span id="prev">&lt;</span><span id="next">&gt;</span>
-	</div>
+	<!-- <div>
+	     <span id="prev">&lt;</span><span id="next">&gt;</span>
+	     </div> -->
     </body>
 </html>
