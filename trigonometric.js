@@ -5,6 +5,10 @@ MathBox.DOM.Types.latex = MathBox.DOM.createClass({
   }
 });
 
+function toTimeWithPlay(time) {
+  return params.play ? time : 0;
+}
+
 mathbox = mathBox({
   plugins: ['core', 'controls', 'cursor', 'stats'],
   controls: {
@@ -33,8 +37,8 @@ if (window == top) {
 }
 
 view = mathbox.cartesian({
-  range: [[-3, 7], [-3, 3], [-1, 1]],
-  scale: [5, 3, 1],
+  range: [[-7, 7], [-3, 3], [-1, 1]],
+  scale: [7, 3, 1],
 });
 
 present = view.present({
@@ -53,7 +57,7 @@ present.axis({
   })
   .grid({
     width: 2,  
-    divideX: 5,
+    divideX: 7,
     divideY: 3,
   });
 
@@ -78,7 +82,7 @@ present.interval({
   })
   .dom({
     snap: false,
-    offset: [0, 500],
+    offset: [0, 233],
     depth: .5,
     size: 48,
     zoom: 1,
@@ -125,7 +129,7 @@ present.slide().reveal()
     width: 2,
     expr: function (emit, x, i, time) {
       emit(0, 0);
-      emit(Math.cos(time), params.amplitude * Math.sin(params.angular * time));
+      emit(Math.cos(toTimeWithPlay(time)), params.amplitude * Math.sin(params.angular * (toTimeWithPlay(time))));
     },
     items: 1,
     channels: 2,
@@ -140,7 +144,7 @@ present.slide().reveal()
     width: 2,
     expr: function (emit, x, i, time) {
       emit(0, 0);
-      emit(Math.cos(time), 0);
+      emit(Math.cos(toTimeWithPlay(time)), 0);
     },
     items: 1,
     channels: 2,
@@ -154,7 +158,7 @@ present.slide().reveal()
     width: 2,
     expr: function (emit, x, i, time) {
       emit(0, 0);
-      emit(0, params.amplitude * Math.sin(params.angular * time));
+      emit(0, params.amplitude * Math.sin(params.angular * (toTimeWithPlay(time))));
     },
     items: 1,
     channels: 2,
@@ -167,7 +171,7 @@ present.slide().reveal()
   .interval({
     width: 1,
     expr: function (emit, x, i, time) {
-      emit(0, params.amplitude * Math.sin(params.angular * time));
+      emit(0, params.amplitude * Math.sin(params.angular * (toTimeWithPlay(time))));
     },
     items: 1,
     channels: 2,
@@ -186,7 +190,6 @@ present.slide().reveal()
     },
   })
   .dom({
-    attributes: {id: "label_sin"},
     snap: false,
     offset: [0, -48],
     depth: .5,
@@ -197,7 +200,7 @@ present.slide().reveal()
   .interval({
     width: 1,
     expr: function (emit, x, i, time) {
-      emit(Math.cos(time), 0);
+      emit(Math.cos(toTimeWithPlay(time)), 0);
     },
     items: 1,
     channels: 2,
@@ -216,9 +219,8 @@ present.slide().reveal()
     },
   })
   .dom({
-    attributes: {id: "label_cos"},
     snap: false,
-    offset: [0, -48],
+    offset: [0, -34],
     depth: .5,
     size: 32,
     zoom: 1,
@@ -229,25 +231,27 @@ present.slide().reveal()
   .interval({
     width: 256,
     expr: function (emit, x, i, time) {
-      var d = params.amplitude * Math.sin(params.angular * (x + time));
+      var d = params.amplitude * Math.sin(params.angular * (x + (toTimeWithPlay(time))));
       emit(x, d);
     },
-    items: 1,
+    items: 2,
     channels: 2,
   })
   .line({
     color: 0x3090FF,
     width: 10,
-  }).transform().step({
+  })
+  .transform().step({
     duration: 1,
     script: [
       {rotation: [0, 0, 0]},
-      {rotation: [0, 0, -π/2]},
+      {rotation: [0, 0, π / 2.0]},
     ]
-  }).interval({
+  })
+  .interval({
     width: 128,
     expr: function (emit, x, i, time) {
-      var d = Math.cos(x + time);
+      var d = Math.cos(x - toTimeWithPlay(time));
       emit(d, x);
     },
     items: 1,
@@ -256,4 +260,54 @@ present.slide().reveal()
   .line({
     color: 0x30EE90,
     width: 10,
-  }).slide();
+  }).end()
+  .slide().reveal()
+  .interval({
+    width: 32,
+    expr: function (emit, x, i, time) {
+      h = 0.15;
+      t1 = Math.sin(x - h + toTimeWithPlay(time));
+      t2 = Math.sin(x + h + toTimeWithPlay(time));
+
+      tilt = (t2 - t1) / 2.0 * h;
+      
+      emit(x - h, t1);
+      emit(x + h, t2);
+    },
+    items: 2,
+    channels: 2,
+  }).vector ({
+    color: 0xff8866,
+    width: 16,
+    end: true,
+  })
+  .step({
+    script: [
+      {props: {opacity: 0.0}},
+      {props: {opacity: 1.0}},
+    ]
+  })
+  .slide().reveal()
+  .interval({
+    width: 32,
+    expr: function (emit, x, i, time) {
+      h = 0.08;
+      t1 = Math.sin(x - h + toTimeWithPlay(time));
+      t2 = Math.sin(x + h + toTimeWithPlay(time));
+      emit(x, Math.sin(x + toTimeWithPlay(time)));
+      emit(x, (t2 - t1) / (2.0 * h));
+    },
+    items: 2,
+    channels: 2,
+  }).vector ({
+    color: 0xffff00,
+    width: 20,
+    end: true,
+  })
+  .step({
+    script: [
+      {props: {opacity: 0.0}},
+      {props: {opacity: 1.0}},
+    ]
+  }).end()
+  .slide();
