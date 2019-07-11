@@ -11,12 +11,27 @@
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1">
     </head>
     <body>
-	<div id="exp_sin_cos" style="
-		 text-align: center;
-		 position: relative;
-		 top: 89px;
-		 font-size: 48px;
-		 "></div>
+	<div style="position: absolute;
+		    left: 50%;
+		    bottom: 21px;">
+	    <span onclick="prevSlide()" style="display: inline-block;
+			   height: 34px;
+			   width: 55px;
+			   background-color: rgba(255, 255, 255, 0.4);
+			   text-align: center;
+			   vertical-align: middle;
+			   border: solid 2px black;
+			   border-radius: 8px;">Prev</span>
+            <span onclick="nextSlide()" style="display: inline-block;
+			   height: 34px;
+			   width: 55px;
+			   background-color: rgba(255, 255, 255, 0.4);
+
+			   text-align: center;
+			   vertical-align: middle;
+			   border: solid 2px black;
+			   border-radius: 8px;">Next</span>
+	</div>
 	<script type="text/javascript">
 	 var Params = function() {
 	     this.amplitude = 1;

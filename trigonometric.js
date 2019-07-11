@@ -25,15 +25,23 @@ if (window == top) {
     switch (e.keyCode) {
     case 37:
     case 38:
-      present.set('index', present.get('index') - 1);
+      prevSlide();
       break;
     case 39:
     case 40:
-      present.set('index', present.get('index') + 1);
+      nextSlide();
       break;
     }
     //console.log(present.get('index'));
   }
+}
+
+function prevSlide () {
+  present.set('index', present.get('index') - 1);
+}
+
+function nextSlide () {
+  present.set('index', present.get('index') + 1);
 }
 
 view = mathbox.cartesian({
