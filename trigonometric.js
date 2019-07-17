@@ -132,7 +132,7 @@ present.slide().reveal({
   .slide().reveal()
   .end();
 
-present.slide().reveal()
+present.slide({id: "page1-slide"}).reveal({id: "page1-reveal"})
   .interval({
     width: 2,
     expr: function (emit, x, i, time) {
@@ -234,8 +234,9 @@ present.slide().reveal()
     zoom: 1,
     outline: 2,
   })
-  .end()
-  .slide().reveal()
+  .end(/* page1-reveal */)
+
+  .slide({id: "page2-slide"}).reveal({id: "page2-reveal"})
   .interval({
     width: 256,
     expr: function (emit, x, i, time) {
@@ -268,17 +269,15 @@ present.slide().reveal()
   .line({
     color: 0x30EE90,
     width: 10,
-  }).end()
-  .slide().reveal()
+  }).end(/* page2-reveal */).end(/* page2-slide */)
+
+  .slide({id: "page3-slide"}).reveal({id: "page3-reveal"})
   .interval({
     width: 32,
     expr: function (emit, x, i, time) {
       h = 0.15;
       t1 = Math.sin(x - h + toTimeWithPlay(time));
       t2 = Math.sin(x + h + toTimeWithPlay(time));
-
-      tilt = (t2 - t1) / 2.0 * h;
-      
       emit(x - h, t1);
       emit(x + h, t2);
     },
@@ -294,10 +293,10 @@ present.slide().reveal()
       {props: {opacity: 0.0}},
       {props: {opacity: 1.0}},
     ]
-  })
-  .slide().reveal()
+  }).end(/* page3-reveal */)
+  .slide({id: "page4-slide"}).reveal({id: "page4-reveal"})
   .interval({
-    width: 32,
+    width: 128,
     expr: function (emit, x, i, time) {
       h = 0.08;
       t1 = Math.sin(x - h + toTimeWithPlay(time));
@@ -317,5 +316,28 @@ present.slide().reveal()
       {props: {opacity: 0.0}},
       {props: {opacity: 1.0}},
     ]
-  }).end()
-  .slide();
+  }).end(/* page4-reveal */)
+  .slide()
+  // .slide({id: "page5-slide"}).reveal({id: "page5-reveal"})
+  // .interval({
+  //   width: 32,
+  //   expr: function (emit, x, i, time) {
+  //     h = 0.15;
+  //     t1 = Math.cos(x - h + toTimeWithPlay(time));
+  //     t2 = Math.cos(x + h + toTimeWithPlay(time));
+  //     emit(x - h, t1);
+  //     emit(x + h, t2);
+  //   },
+  //   items: 2,
+  //   channels: 2,
+  // }).vector ({
+  //   color: 0xff8866,
+  //   width: 16,
+  //   end: true,
+  // })
+  // .step({
+  //   script: [
+  //     {props: {opacity: 0.0}},
+  //     {props: {opacity: 1.0}},
+  //   ]
+  // });
